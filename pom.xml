@@ -68,7 +68,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.comego.record.RecordApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>

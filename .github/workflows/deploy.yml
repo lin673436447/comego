@@ -1,0 +1,50 @@
+name: Deploy Backend Application
+
+on:
+  push:
+    branches: [ main ]  # 主分支推送时触发
+  pull_request:
+    branches: [ main ]  # PR合并到主分支时触发
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 步骤1：检出代码
+      - uses: actions/checkout@v4
+      
+      # 步骤2：设置JDK环境
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v4
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          cache: maven
+      
+      # 步骤3：构建项目
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+      
+      # 步骤4：运行测试（可选）
+      - name: Run Tests
+        run: mvn test
+      
+      # 步骤5：部署到服务器
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@v2
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.DEPLOY_TARGET }}
+          SOURCE: 'target/record-0.0.1-SNAPSHOT.jar'
+          SCRIPT_AFTER: |
+            # 停止旧服务
+            PID=$(ps -ef | grep record-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}')
+            if [ -n "$PID" ]; then
+              kill -9 $PID
+            fi
+            # 启动新服务
+            cd ${{ secrets.DEPLOY_TARGET }}
+            nohup java -jar -Dspring.profiles.active=prod -Dspring.config.location=./config/ record-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+            echo "Application deployed successfully"
