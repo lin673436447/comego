@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>往来记 - 人情记账管理</title>
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <!-- 统一的颜色配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1E40AF', // 主色调：深蓝色
+            secondary: '#6B7280', // 次要色：暖灰色
+            accent: '#3B82F6', // 强调色：蓝色
+            success: '#10B981', // 成功色：绿色
+            warning: '#F59E0B', // 警告色：橙色
+            danger: '#EF4444', // 危险色：红色
+            light: '#F3F4F6', // 浅色背景
+            dark: '#1F2937', // 深色文字
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      .nav-active {
+        @apply text-primary font-medium;
+      }
+      .btn-primary {
+        @apply bg-primary text-white px-4 py-3 rounded-lg hover:bg-primary/90 transition-all duration-200;
+      }
+      .btn-secondary {
+        @apply bg-secondary text-white px-4 py-3 rounded-lg hover:bg-secondary/90 transition-all duration-200;
+      }
+      .btn-outline {
+        @apply border border-primary text-primary px-4 py-3 rounded-lg hover:bg-primary/10 transition-all duration-200;
+      }
+      .input-field {
+        @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-base;
+      }
+      .card {
+        @apply bg-white rounded-xl p-5 card-shadow;
+      }
+      .tab-active {
+        @apply text-primary font-medium;
+      }
+      .bottom-nav-active {
+        @apply text-primary;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans">
+  <div class="min-h-screen flex flex-col">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+      <div class="px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+          <i class="fa fa-exchange text-primary text-2xl"></i>
+          <h1 class="text-xl font-bold text-dark">往来记</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+            <i class="fa fa-bell-o text-gray-600"></i>
+          </button>
+          <button class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+            <i class="fa fa-search text-gray-600"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <main class="flex-1 px-4 py-5 overflow-y-auto">
+      <!-- 主内容 -->
+      <div class="w-full">
+
+          <!-- 记账模块 -->
+          <div id="tab-记账" class="tab-content">
+            <!-- 快速记账 -->
+            <div class="card mb-5">
+              <h2 class="text-lg font-bold text-dark mb-4">快速记账</h2>
+              <form class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">金额</label>
+                  <div class="relative">
+                    <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">¥</span>
+                    <input type="number" class="input-field pl-10" placeholder="0.00" style="font-size: 1.25rem;">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">对象</label>
+                  <div class="relative">
+                    <input type="text" class="input-field" placeholder="选择或输入姓名">
+                    <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                      <i class="fa fa-user-plus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">类型</label>
+                    <select class="input-field">
+                      <option value="">选择类型</option>
+                      <option value="婚礼">婚礼</option>
+                      <option value="生日">生日</option>
+                      <option value="节日">节日</option>
+                      <option value="乔迁">乔迁</option>
+                      <option value="聚餐">聚餐</option>
+                      <option value="活动">活动</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">日期</label>
+                    <input type="date" class="input-field">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">关系</label>
+                  <select class="input-field">
+                    <option value="">选择关系</option>
+                    <option value="亲戚">亲戚</option>
+                    <option value="朋友">朋友</option>
+                    <option value="同事">同事</option>
+                    <option value="同学">同学</option>
+                    <option value="其他">其他</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
+                  <textarea class="input-field" rows="2" placeholder="添加备注信息"></textarea>
+                </div>
+                <div class="flex space-x-3">
+                  <button type="button" class="flex-1 btn-primary">
+                    <i class="fa fa-save mr-2"></i>保存
+                  </button>
+                  <button type="button" class="btn-outline">
+                    <i class="fa fa-microphone"></i>
+                  </button>
+                  <button type="button" class="btn-outline">
+                    <i class="fa fa-camera"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- 常用联系人 -->
+            <div class="card mb-5">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-dark">常用联系人</h2>
+                <button type="button" class="text-sm text-primary hover:underline">
+                  管理
+                </button>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=male%20user%20avatar%20portrait&image_size=square" alt="联系人头像" class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                      <h3 class="font-medium text-gray-800">李四</h3>
+                      <p class="text-xs text-gray-500">朋友</p>
+                    </div>
+                  </div>
+                  <button class="text-primary text-sm">选择</button>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=female%20user%20avatar%20portrait&image_size=square" alt="联系人头像" class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                      <h3 class="font-medium text-gray-800">王五</h3>
+                      <p class="text-xs text-gray-500">同事</p>
+                    </div>
+                  </div>
+                  <button class="text-primary text-sm">选择</button>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=male%20user%20avatar%20portrait%20older" alt="联系人头像" class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                      <h3 class="font-medium text-gray-800">赵六</h3>
+                      <p class="text-xs text-gray-500">亲戚</p>
+                    </div>
+                  </div>
+                  <button class="text-primary text-sm">选择</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 最近记账 -->
+            <div class="card">
+              <h2 class="text-lg font-bold text-dark mb-4">最近记账</h2>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                      <i class="fa fa-birthday-cake text-primary"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-medium text-gray-800">李四生日</h3>
+                      <p class="text-xs text-gray-500">2026-01-20</p>
+                    </div>
+                  </div>
+                  <span class="font-medium text-gray-800">¥500.00</span>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                      <i class="fa fa-home text-green-600"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-medium text-gray-800">王五乔迁</h3>
+                      <p class="text-xs text-gray-500">2026-01-15</p>
+                    </div>
+                  </div>
+                  <span class="font-medium text-gray-800">¥800.00</span>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                      <i class="fa fa-cutlery text-red-600"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-medium text-gray-800">同事聚餐</h3>
+                      <p class="text-xs text-gray-500">2026-01-10</p>
+                    </div>
+                  </div>
+                  <span class="font-medium text-gray-800">¥300.00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 账单管理模块 -->
+          <div id="tab-账单" class="tab-content hidden">
+            <!-- 筛选条件 -->
+            <div class="card mb-5">
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">时间范围</label>
+                  <select class="input-field">
+                    <option value="">全部</option>
+                    <option value="今天">今天</option>
+                    <option value="本周">本周</option>
+                    <option value="本月">本月</option>
+                    <option value="本季度">本季度</option>
+                    <option value="本年">本年</option>
+                    <option value="自定义">自定义</option>
+                  </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">类型</label>
+                    <select class="input-field">
+                      <option value="">全部类型</option>
+                      <option value="婚礼">婚礼</option>
+                      <option value="生日">生日</option>
+                      <option value="节日">节日</option>
+                      <option value="乔迁">乔迁</option>
+                      <option value="聚餐">聚餐</option>
+                      <option value="活动">活动</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">关系</label>
+                    <select class="input-field">
+                      <option value="">全部关系</option>
+                      <option value="亲戚">亲戚</option>
+                      <option value="朋友">朋友</option>
+                      <option value="同事">同事</option>
+                      <option value="同学">同学</option>
+                      <option value="其他">其他</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">对象</label>
+                  <input type="text" class="input-field" placeholder="搜索联系人">
+                </div>
+              </div>
+              <div class="flex justify-between mt-4 space-x-3">
+                <button type="button" class="flex-1 btn-outline">
+                  <i class="fa fa-filter mr-2"></i>重置
+                </button>
+                <button type="button" class="flex-1 btn-primary">
+                  <i class="fa fa-search mr-2"></i>查询
+                </button>
+              </div>
+            </div>
+
+            <!-- 账单列表 -->
+            <div class="card mb-5">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-dark">账单明细</h2>
+                <div class="flex space-x-2">
+                  <button type="button" class="btn-outline text-sm py-1.5 px-3">
+                    <i class="fa fa-download mr-1"></i>导出
+                  </button>
+                  <button type="button" class="btn-outline text-sm py-1.5 px-3">
+                    <i class="fa fa-print mr-1"></i>打印
+                  </button>
+                </div>
+              </div>
+              <div class="space-y-3">
+                <!-- 账单项 1 -->
+                <div class="p-4 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                  <div class="flex justify-between items-start">
+                    <div class="flex items-center space-x-3">
+                      <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=male%20user%20avatar%20portrait&image_size=square" alt="联系人头像" class="w-10 h-10 rounded-full object-cover">
+                      <div>
+                        <h3 class="font-medium text-gray-800">李四</h3>
+                        <p class="text-xs text-gray-500">2026-01-20 | 生日 | 朋友</p>
+                      </div>
+                    </div>
+                    <span class="font-medium text-gray-800">¥500.00</span>
+                  </div>
+                  <div class="mt-2">
+                    <p class="text-sm text-gray-600">备注：生日聚会</p>
+                  </div>
+                  <div class="flex justify-end mt-2 space-x-3">
+                    <button type="button" class="text-sm text-primary hover:underline">编辑</button>
+                    <button type="button" class="text-sm text-red-500 hover:underline">删除</button>
+                  </div>
+                </div>
+                
+                <!-- 账单项 2 -->
+                <div class="p-4 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                  <div class="flex justify-between items-start">
+                    <div class="flex items-center space-x-3">
+                      <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=female%20user%20avatar%20portrait&image_size=square" alt="联系人头像" class="w-10 h-10 rounded-full object-cover">
+                      <div>
+                        <h3 class="font-medium text-gray-800">王五</h3>
+                        <p class="text-xs text-gray-500">2026-01-15 | 乔迁 | 同事</p>
+                      </div>
+                    </div>
+                    <span class="font-medium text-gray-800">¥800.00</span>
+                  </div>
+                  <div class="mt-2">
+                    <p class="text-sm text-gray-600">备注：新房乔迁</p>
+                  </div>
+                  <div class="flex justify-end mt-2 space-x-3">
+                    <button type="button" class="text-sm text-primary hover:underline">编辑</button>
+                    <button type="button" class="text-sm text-red-500 hover:underline">删除</button>
+                  </div>
+                </div>
+                
+                <!-- 账单项 3 -->
+                <div class="p-4 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                  <div class="flex justify-between items-start">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-xs">
+                        同事
+                      </div>
+                      <div>
+                        <h3 class="font-medium text-gray-800">同事聚餐</h3>
+                        <p class="text-xs text-gray-500">2026-01-10 | 聚餐 | 同事</p>
+                      </div>
+                    </div>
+                    <span class="font-medium text-gray-800">¥300.00</span>
+                  </div>
+                  <div class="mt-2">
+                    <p class="text-sm text-gray-600">备注：部门聚餐</p>
+                  </div>
+                  <div class="flex justify-end mt-2 space-x-3">
+                    <button type="button" class="text-sm text-primary hover:underline">编辑</button>
+                    <button type="button" class="text-sm text-red-500 hover:underline">删除</button>
+                  </div>
+                </div>
+                
+                <!-- 账单项 4 -->
+                <div class="p-4 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                  <div class="flex justify-between items-start">
+                    <div class="flex items-center space-x-3">
+                      <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=male%20user%20avatar%20portrait%20older" alt="联系人头像" class="w-10 h-10 rounded-full object-cover">
+                      <div>
+                        <h3 class="font-medium text-gray-800">赵六</h3>
+                        <p class="text-xs text-gray-500">2026-01-05 | 节日 | 亲戚</p>
+                      </div>
+                    </div>
+                    <span class="font-medium text-gray-800">¥1000.00</span>
+                  </div>
+                  <div class="mt-2">
+                    <p class="text-sm text-gray-600">备注：元旦红包</p>
+                  </div>
+                  <div class="flex justify-end mt-2 space-x-3">
+                    <button type="button" class="text-sm text-primary hover:underline">编辑</button>
+                    <button type="button" class="text-sm text-red-500 hover:underline">删除</button>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-between items-center mt-4">
+                <p class="text-sm text-gray-500">共 4 条记录</p>
+                <div class="flex space-x-1">
+                  <button type="button" class="px-3 py-1.5 rounded border border-gray-300 text-sm text-gray-500 hover:bg-gray-50">上一页</button>
+                  <button type="button" class="px-3 py-1.5 rounded border border-primary bg-primary text-white text-sm">1</button>
+                  <button type="button" class="px-3 py-1.5 rounded border border-gray-300 text-sm text-gray-500 hover:bg-gray-50">2</button>
+                  <button type="button" class="px-3 py-1.5 rounded border border-gray-300 text-sm text-gray-500 hover:bg-gray-50">下一页</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 余额提醒 -->
+            <div class="card">
+              <h2 class="text-lg font-bold text-dark mb-4">余额提醒</h2>
+              <div class="space-y-3">
+                <div class="p-4 rounded-lg bg-yellow-50 border border-yellow-200">
+                  <div class="flex justify-between items-start">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                        <i class="fa fa-balance-scale text-yellow-600"></i>
+                      </div>
+                      <div>
+                        <h3 class="font-medium text-gray-800">李四</h3>
+                        <p class="text-xs text-gray-600">上次往来: 2026-01-20 (生日)</p>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <p class="font-medium text-gray-800">¥500.00</p>
+                      <p class="text-xs text-yellow-600">建议回礼</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4 rounded-lg bg-blue-50 border border-blue-200">
+                  <div class="flex justify-between items-start">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                        <i class="fa fa-balance-scale text-blue-600"></i>
+                      </div>
+                      <div>
+                        <h3 class="font-medium text-gray-800">王五</h3>
+                        <p class="text-xs text-gray-600">上次往来: 2026-01-15 (乔迁)</p>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <p class="font-medium text-gray-800">¥800.00</p>
+                      <p class="text-xs text-blue-600">往来平衡</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4 rounded-lg bg-green-50 border border-green-200">
+                  <div class="flex justify-between items-start">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                        <i class="fa fa-balance-scale text-green-600"></i>
+                      </div>
+                      <div>
+                        <h3 class="font-medium text-gray-800">赵六</h3>
+                        <p class="text-xs text-gray-600">上次往来: 2026-01-05 (元旦)</p>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <p class="font-medium text-gray-800">¥1000.00</p>
+                      <p class="text-xs text-green-600">往来平衡</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 数据分析模块 -->
+          <div id="tab-分析" class="tab-content hidden">
+            <!-- 支出统计卡片 -->
+            <div class="card mb-5">
+              <h2 class="text-lg font-bold text-dark mb-4">支出统计</h2>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-gray-600">本月支出</span>
+                  <span class="font-medium text-gray-800">¥2,600.00</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-gray-600">上月支出</span>
+                  <span class="font-medium text-gray-800">¥1,800.00</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-gray-600">同比增长</span>
+                  <span class="font-medium text-green-600">+44.4%</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-gray-600">本年累计</span>
+                  <span class="font-medium text-gray-800">¥2,600.00</span>
+                </div>
+              </div>
+              <div class="mt-6">
+                <canvas id="expenseChart" height="200"></canvas>
+              </div>
+            </div>
+
+            <!-- 分类分析 -->
+            <div class="card mb-5">
+              <h2 class="text-lg font-bold text-dark mb-4">分类分析</h2>
+              <div class="h-64">
+                <canvas id="categoryChart"></canvas>
+              </div>
+              <div class="mt-4 space-y-2">
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                  <span class="text-sm text-gray-600">节日</span>
+                  <span class="ml-auto font-medium text-gray-800">38.5%</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                  <span class="text-sm text-gray-600">乔迁</span>
+                  <span class="ml-auto font-medium text-gray-800">30.8%</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <span class="text-sm text-gray-600">生日</span>
+                  <span class="ml-auto font-medium text-gray-800">19.2%</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                  <span class="text-sm text-gray-600">聚餐</span>
+                  <span class="ml-auto font-medium text-gray-800">11.5%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 预算管理 -->
+            <div class="card mb-5">
+              <h2 class="text-lg font-bold text-dark mb-4">预算管理</h2>
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="text-sm font-medium text-gray-700">本月预算</span>
+                    <span class="text-sm text-gray-600">¥3,000.00</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div class="bg-primary h-3 rounded-full" style="width: 86.7%"></div>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">已使用 ¥2,600.00 (86.7%)</p>
+                </div>
+                <div>
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="text-sm font-medium text-gray-700">本季度预算</span>
+                    <span class="text-sm text-gray-600">¥10,000.00</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div class="bg-primary h-3 rounded-full" style="width: 26%"></div>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">已使用 ¥2,600.00 (26%)</p>
+                </div>
+                <div>
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="text-sm font-medium text-gray-700">本年预算</span>
+                    <span class="text-sm text-gray-600">¥50,000.00</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div class="bg-primary h-3 rounded-full" style="width: 5.2%"></div>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">已使用 ¥2,600.00 (5.2%)</p>
+                </div>
+              </div>
+              <button type="button" class="btn-primary w-full mt-6">
+                <i class="fa fa-sliders mr-2"></i>调整预算
+              </button>
+            </div>
+
+            <!-- 关系图谱 -->
+            <div class="card">
+              <h2 class="text-lg font-bold text-dark mb-4">关系图谱</h2>
+              <div class="space-y-6">
+                <div>
+                  <h3 class="text-md font-medium text-gray-700 mb-3">关系分布</h3>
+                  <div class="h-64">
+                    <canvas id="relationChart"></canvas>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="text-md font-medium text-gray-700 mb-3">往来热度</h3>
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center space-x-3">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=male%20user%20avatar%20portrait%20older" alt="联系人头像" class="w-8 h-8 rounded-full object-cover">
+                        <span class="font-medium text-gray-800">赵六</span>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                          <div class="bg-red-500 h-2 rounded-full" style="width: 90%"></div>
+                        </div>
+                        <span class="text-xs text-gray-600">90%</span>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center space-x-3">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=female%20user%20avatar%20portrait&image_size=square" alt="联系人头像" class="w-8 h-8 rounded-full object-cover">
+                        <span class="font-medium text-gray-800">王五</span>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                          <div class="bg-red-500 h-2 rounded-full" style="width: 75%"></div>
+                        </div>
+                        <span class="text-xs text-gray-600">75%</span>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center space-x-3">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=male%20user%20avatar%20portrait&image_size=square" alt="联系人头像" class="w-8 h-8 rounded-full object-cover">
+                        <span class="font-medium text-gray-800">李四</span>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                          <div class="bg-red-500 h-2 rounded-full" style="width: 60%"></div>
+                        </div>
+                        <span class="text-xs text-gray-600">60%</span>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center space-x-3">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=female%20user%20avatar%20portrait%20young" alt="联系人头像" class="w-8 h-8 rounded-full object-cover">
+                        <span class="font-medium text-gray-800">孙七</span>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                          <div class="bg-red-500 h-2 rounded-full" style="width: 45%"></div>
+                        </div>
+                        <span class="text-xs text-gray-600">45%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 个人中心模块 -->
+          <div id="tab-个人" class="tab-content hidden">
+            <!-- 个人信息 -->
+            <div class="card mb-5">
+              <div class="flex flex-col items-center p-6">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=user%20avatar%20portrait%20professional%20headshot&image_size=square" alt="用户头像" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md mb-4">
+                <h2 class="text-xl font-bold text-dark">张三</h2>
+                <p class="text-sm text-gray-500 mt-1">高级会员</p>
+                <div class="mt-6 w-full">
+                  <button type="button" class="btn-primary w-full">
+                    <i class="fa fa-pencil mr-2"></i>编辑资料
+                  </button>
+                </div>
+              </div>
+              <div class="border-t border-gray-100 pt-4">
+                <div class="space-y-3">
+                  <div class="flex items-center space-x-4 px-6">
+                    <i class="fa fa-phone text-gray-500 w-5 text-center"></i>
+                    <span class="text-sm text-gray-700">138****8888</span>
+                  </div>
+                  <div class="flex items-center space-x-4 px-6">
+                    <i class="fa fa-envelope text-gray-500 w-5 text-center"></i>
+                    <span class="text-sm text-gray-700">zhangsan@example.com</span>
+                  </div>
+                  <div class="flex items-center space-x-4 px-6">
+                    <i class="fa fa-calendar text-gray-500 w-5 text-center"></i>
+                    <span class="text-sm text-gray-700">2026-01-01 注册</span>
+                  </div>
+                  <div class="flex items-center space-x-4 px-6">
+                    <i class="fa fa-map-marker text-gray-500 w-5 text-center"></i>
+                    <span class="text-sm text-gray-700">北京市朝阳区</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 账户设置 -->
+            <div class="card mb-5">
+              <h2 class="text-lg font-bold text-dark mb-4">账户设置</h2>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                      <i class="fa fa-lock text-primary"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">修改密码</span>
+                  </div>
+                  <i class="fa fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                      <i class="fa fa-shield text-green-600"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">隐私设置</span>
+                  </div>
+                  <i class="fa fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                      <i class="fa fa-bell text-yellow-600"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">通知设置</span>
+                  </div>
+                  <i class="fa fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                      <i class="fa fa-language text-red-600"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">语言设置</span>
+                  </div>
+                  <i class="fa fa-chevron-right text-gray-400"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- 数据管理 -->
+            <div class="card mb-5">
+              <h2 class="text-lg font-bold text-dark mb-4">数据管理</h2>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                      <i class="fa fa-download text-primary"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">导出数据</span>
+                  </div>
+                  <i class="fa fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                      <i class="fa fa-cloud-upload text-green-600"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">备份数据</span>
+                  </div>
+                  <i class="fa fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                      <i class="fa fa-refresh text-yellow-600"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">恢复数据</span>
+                  </div>
+                  <i class="fa fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                      <i class="fa fa-trash text-red-600"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">清空数据</span>
+                  </div>
+                  <i class="fa fa-chevron-right text-gray-400"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- 关于我们 -->
+            <div class="card">
+              <h2 class="text-lg font-bold text-dark mb-4">关于我们</h2>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                      <i class="fa fa-info-circle text-primary"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">关于往来记</span>
+                  </div>
+                  <i class="fa fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                      <i class="fa fa-star text-green-600"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">给我们评分</span>
+                  </div>
+                  <i class="fa fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                      <i class="fa fa-question-circle text-yellow-600"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">帮助中心</span>
+                  </div>
+                  <i class="fa fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                      <i class="fa fa-bug text-red-600"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">反馈问题</span>
+                  </div>
+                  <i class="fa fa-chevron-right text-gray-400"></i>
+                </div>
+              </div>
+              <div class="mt-6 text-center">
+                <p class="text-sm text-gray-500">往来记 v1.0.0</p>
+                <p class="text-xs text-gray-400 mt-1">© 2026 往来记团队. 保留所有权利.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 底部导航栏 -->
+    <nav class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 z-20">
+      <div class="flex justify-around items-center py-2">
+        <button class="bottom-nav-btn bottom-nav-active flex flex-col items-center py-2 px-4" data-target="tab-记账">
+          <i class="fa fa-pencil text-lg"></i>
+          <span class="text-xs mt-1">记账</span>
+        </button>
+        <button class="bottom-nav-btn flex flex-col items-center py-2 px-4" data-target="tab-账单">
+          <i class="fa fa-list-alt text-lg"></i>
+          <span class="text-xs mt-1">账单</span>
+        </button>
+        <button class="bottom-nav-btn flex flex-col items-center py-2 px-4" data-target="tab-分析">
+          <i class="fa fa-bar-chart text-lg"></i>
+          <span class="text-xs mt-1">分析</span>
+        </button>
+        <button class="bottom-nav-btn flex flex-col items-center py-2 px-4" data-target="tab-个人">
+          <i class="fa fa-user text-lg"></i>
+          <span class="text-xs mt-1">我的</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // 选项卡切换
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const navLinks = document.querySelectorAll('.nav-link');
+      const bottomNavBtns = document.querySelectorAll('.bottom-nav-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      function switchTab(target) {
+        // 隐藏所有内容
+        tabContents.forEach(content => {
+          content.classList.add('hidden');
+        });
+
+        // 移除所有按钮和导航链接的活动状态
+        tabBtns.forEach(btn => {
+          btn.classList.remove('tab-active');
+          btn.classList.add('text-gray-500');
+          btn.classList.remove('text-primary');
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('nav-active');
+        });
+
+        bottomNavBtns.forEach(btn => {
+          btn.classList.remove('bottom-nav-active');
+          btn.classList.add('text-gray-500');
+          btn.classList.remove('text-primary');
+        });
+
+        // 显示目标内容
+        document.getElementById(target).classList.remove('hidden');
+
+        // 设置活动按钮和导航链接
+        const tabBtn = document.querySelector(`.tab-btn[data-target="${target}"]`);
+        if (tabBtn) {
+          tabBtn.classList.add('tab-active');
+          tabBtn.classList.remove('text-gray-500');
+          tabBtn.classList.add('text-primary');
+        }
+
+        const navLink = document.querySelector(`.nav-link[data-target="${target}"]`);
+        if (navLink) {
+          navLink.classList.add('nav-active');
+        }
+
+        const bottomNavBtn = document.querySelector(`.bottom-nav-btn[data-target="${target}"]`);
+        if (bottomNavBtn) {
+          bottomNavBtn.classList.add('bottom-nav-active');
+          bottomNavBtn.classList.remove('text-gray-500');
+          bottomNavBtn.classList.add('text-primary');
+        }
+      }
+
+      // 绑定选项卡按钮事件
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const target = this.getAttribute('data-target');
+          switchTab(target);
+        });
+      });
+
+      // 绑定导航链接事件
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = this.getAttribute('data-target');
+          switchTab(target);
+        });
+      });
+
+      // 绑定底部导航按钮事件
+      bottomNavBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const target = this.getAttribute('data-target');
+          switchTab(target);
+        });
+      });
+
+      // 初始化图表
+      initCharts();
+    });
+
+    // 初始化图表
+    function initCharts() {
+      // 支出统计图表
+      const expenseCtx = document.getElementById('expenseChart');
+      if (expenseCtx) {
+        new Chart(expenseCtx, {
+          type: 'line',
+          data: {
+            labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+            datasets: [{
+              label: '支出金额',
+              data: [2600, 0, 0, 0, 0, 0],
+              borderColor: '#1E40AF',
+              backgroundColor: 'rgba(30, 64, 175, 0.1)',
+              tension: 0.4,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: function(value) {
+                    return '¥' + value;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // 分类分析图表
+      const categoryCtx = document.getElementById('categoryChart');
+      if (categoryCtx) {
+        new Chart(categoryCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['节日', '乔迁', '生日', '聚餐'],
+            datasets: [{
+              data: [1000, 800, 500, 300],
+              backgroundColor: [
+                '#3B82F6',
+                '#10B981',
+                '#F59E0B',
+                '#EF4444'
+              ],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            cutout: '70%'
+          }
+        });
+      }
+
+      // 关系分布图表
+      const relationCtx = document.getElementById('relationChart');
+      if (relationCtx) {
+        new Chart(relationCtx, {
+          type: 'pie',
+          data: {
+            labels: ['亲戚', '朋友', '同事', '同学'],
+            datasets: [{
+              data: [40, 30, 20, 10],
+              backgroundColor: [
+                '#3B82F6',
+                '#10B981',
+                '#F59E0B',
+                '#EF4444'
+              ],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>

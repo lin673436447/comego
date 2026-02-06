@@ -1,0 +1,586 @@
+/**
+ * 往来记 - 通用组件样式
+ * 可直接使用的组件类名
+ */
+
+@import './theme.scss';
+
+// ==================== 页面结构组件 ====================
+
+// 页面根容器
+.page-container {
+  min-height: 100vh;
+  background: $bg-primary;
+}
+
+// 顶部渐变头部区域
+.header-gradient {
+  background: $primary-gradient;
+  padding: 60rpx $page-padding 100rpx;
+  position: relative;
+  overflow: hidden;
+  
+  // 装饰圆形
+  .decoration-circle {
+    position: absolute;
+    border-radius: $radius-full;
+    background: rgba(255, 255, 255, 0.1);
+    
+    &.circle-1 {
+      width: 300rpx;
+      height: 300rpx;
+      top: -100rpx;
+      right: -80rpx;
+    }
+    
+    &.circle-2 {
+      width: 200rpx;
+      height: 200rpx;
+      bottom: 50rpx;
+      left: -60rpx;
+    }
+    
+    &.circle-3 {
+      width: 150rpx;
+      height: 150rpx;
+      top: 100rpx;
+      right: 100rpx;
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+}
+
+// 内容区域（覆盖在头部下方）
+.content-section {
+  padding: 0 $page-padding $spacing-xl;
+  margin-top: -60rpx;
+  position: relative;
+  z-index: 2;
+}
+
+// ==================== 卡片组件 ====================
+
+// 基础卡片
+.card {
+  background: #FFFFFF;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  box-shadow: $shadow-md;
+  margin-bottom: $spacing-md;
+}
+
+// 玻璃态卡片
+.card-glass {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20rpx);
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+// 卡片头部
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+  
+  .header-title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+  }
+  
+  .header-more {
+    font-size: $font-size-base;
+    color: $primary-color;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// ==================== 按钮组件 ====================
+
+// 主按钮
+.btn-primary {
+  @include btn-gradient($primary-gradient, $btn-shadow-primary);
+  height: 100rpx;
+  font-size: $font-size-lg;
+}
+
+// 成功按钮
+.btn-success {
+  @include btn-gradient($success-gradient, $btn-shadow-success);
+  height: 100rpx;
+  font-size: $font-size-lg;
+}
+
+// 警告按钮
+.btn-warning {
+  @include btn-gradient($warning-gradient, $btn-shadow-warning);
+  height: 100rpx;
+  font-size: $font-size-lg;
+}
+
+// 危险按钮
+.btn-danger {
+  @include btn-gradient($danger-gradient, $btn-shadow-danger);
+  height: 100rpx;
+  font-size: $font-size-lg;
+}
+
+// 次要按钮
+.btn-secondary {
+  @include btn-base;
+  height: 100rpx;
+  background: $bg-secondary;
+  color: $text-secondary;
+  font-size: $font-size-lg;
+  
+  &:active {
+    background: $bg-tertiary;
+  }
+}
+
+// 小按钮
+.btn-sm {
+  height: 64rpx;
+  font-size: $font-size-base;
+  padding: 0 $spacing-md;
+}
+
+// ==================== 输入框组件 ====================
+
+// 输入框组
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+// 输入框项
+.input-item {
+  display: flex;
+  align-items: center;
+  height: 100rpx;
+  background: $bg-primary;
+  border-radius: $radius-lg;
+  padding: 0 $spacing-md;
+  border: 2rpx solid transparent;
+  transition: all 0.3s ease;
+  
+  &.active {
+    background: #FFFFFF;
+    border-color: $primary-color;
+    box-shadow: 0 4rpx 20rpx rgba(102, 126, 234, 0.15);
+  }
+  
+  .input-prefix {
+    margin-right: $spacing-sm;
+    
+    .iconfont {
+      font-size: 40rpx;
+      color: $text-tertiary;
+    }
+  }
+  
+  .input-field {
+    flex: 1;
+    font-size: $font-size-base;
+    color: $text-primary;
+    
+    &::placeholder {
+      color: $text-tertiary;
+    }
+  }
+  
+  .input-suffix {
+    margin-left: $spacing-sm;
+    
+    .iconfont {
+      font-size: 40rpx;
+      color: $text-tertiary;
+    }
+  }
+}
+
+// ==================== 图标组件 ====================
+
+// 图标容器
+.icon-box {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: $radius-xl;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: $shadow-sm;
+  
+  .iconfont {
+    font-size: 44rpx;
+    color: #FFFFFF;
+  }
+  
+  &.blue {
+    background: $primary-gradient;
+  }
+  
+  &.green {
+    background: $success-gradient;
+  }
+  
+  &.orange {
+    background: $warning-gradient;
+  }
+  
+  &.purple {
+    background: $purple-gradient;
+  }
+  
+  &.red {
+    background: $danger-gradient;
+  }
+  
+  &.gray {
+    background: $bg-secondary;
+    
+    .iconfont {
+      color: $text-secondary;
+    }
+  }
+}
+
+// 小图标
+.icon-box-sm {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: $radius-md;
+  
+  .iconfont {
+    font-size: 28rpx;
+  }
+}
+
+// ==================== 列表组件 ====================
+
+// 列表项
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md;
+  background: $bg-primary;
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-sm;
+  transition: all 0.3s ease;
+  
+  &:active {
+    background: $bg-secondary;
+  }
+  
+  .item-icon {
+    width: 72rpx;
+    height: 72rpx;
+    border-radius: $radius-lg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: $spacing-sm;
+    flex-shrink: 0;
+    
+    &.wedding { background: #FEF3C7; }
+    &.birthday { background: #DBEAFE; }
+    &.festival { background: #D1FAE5; }
+    &.house { background: #FCE7F3; }
+    &.dinner { background: #E0E7FF; }
+    &.activity { background: #FEE2E2; }
+    &.default { background: $bg-secondary; }
+    
+    .iconfont {
+      font-size: 36rpx;
+      color: $text-primary;
+    }
+  }
+  
+  .item-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+  
+  .item-title {
+    font-size: $font-size-md;
+    font-weight: $font-weight-medium;
+    color: $text-primary;
+  }
+  
+  .item-subtitle {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+  
+  .item-right {
+    text-align: right;
+  }
+  
+  .item-value {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+  }
+  
+  .item-arrow {
+    margin-left: $spacing-sm;
+    
+    .iconfont {
+      font-size: 32rpx;
+      color: $text-tertiary;
+    }
+  }
+}
+
+// ==================== 进度条组件 ====================
+
+// 进度条
+.progress-bar {
+  width: 100%;
+  height: 12rpx;
+  background: $bg-tertiary;
+  border-radius: 6rpx;
+  overflow: hidden;
+  
+  .progress-fill {
+    height: 100%;
+    border-radius: 6rpx;
+    transition: width 0.3s ease;
+    
+    &.success {
+      background: $success-gradient;
+    }
+    
+    &.warning {
+      background: $warning-gradient;
+    }
+    
+    &.danger {
+      background: $danger-gradient;
+    }
+  }
+}
+
+// ==================== 标签组件 ====================
+
+// 状态标签
+.status-tag {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  
+  &.success {
+    background: #D1FAE5;
+    color: #059669;
+  }
+  
+  &.warning {
+    background: #FEF3C7;
+    color: #D97706;
+  }
+  
+  &.danger {
+    background: #FEE2E2;
+    color: #DC2626;
+  }
+  
+  &.info {
+    background: #DBEAFE;
+    color: #2563EB;
+  }
+}
+
+// ==================== 空状态组件 ====================
+
+.empty-state {
+  @include empty-state;
+}
+
+// ==================== 导航栏组件 ====================
+
+// 顶部导航栏
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md $page-padding;
+  position: relative;
+  z-index: 1;
+  
+  .nav-back {
+    width: 80rpx;
+    height: 80rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .iconfont {
+      font-size: 40rpx;
+      color: #FFFFFF;
+    }
+  }
+  
+  .nav-title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: #FFFFFF;
+  }
+  
+  .nav-right {
+    width: 80rpx;
+    height: 80rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .iconfont {
+      font-size: 40rpx;
+      color: #FFFFFF;
+    }
+  }
+}
+
+// ==================== 用户信息组件 ====================
+
+// 用户头像区域
+.user-area {
+  display: flex;
+  align-items: center;
+  
+  .user-avatar {
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: $radius-full;
+    border: 4rpx solid rgba(255, 255, 255, 0.3);
+    margin-right: $spacing-sm;
+  }
+  
+  .user-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-greeting {
+    font-size: $font-size-sm;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 4rpx;
+  }
+  
+  .user-name {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: #FFFFFF;
+  }
+}
+
+// ==================== 统计卡片组件 ====================
+
+// 统计卡片
+.stat-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20rpx);
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+  
+  .stat-label {
+    font-size: $font-size-base;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: $spacing-xs;
+  }
+  
+  .stat-value {
+    font-size: $font-size-4xl;
+    font-weight: $font-weight-bold;
+    color: #FFFFFF;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .stat-compare {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    
+    .compare-badge {
+      display: flex;
+      align-items: center;
+      gap: 6rpx;
+      padding: 6rpx 16rpx;
+      border-radius: 20rpx;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      
+      &.up {
+        background: rgba(239, 68, 68, 0.3);
+        color: #FECACA;
+      }
+      
+      &.down {
+        background: rgba(16, 185, 129, 0.3);
+        color: #A7F3D0;
+      }
+    }
+    
+    .compare-text {
+      font-size: $font-size-sm;
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
+// ==================== 快捷操作组件 ====================
+
+// 快捷操作网格
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+  
+  .action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: $spacing-sm 0;
+  }
+  
+  .action-label {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+    font-weight: $font-weight-medium;
+    margin-top: $spacing-xs;
+  }
+}
+
+// ==================== 加载动画 ====================
+
+.loading-spinner {
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  border-top-color: #FFFFFF;
+  border-radius: $radius-full;
+  @include spin;
+}
+
+.loading-spinner-dark {
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid $bg-tertiary;
+  border-top-color: $primary-color;
+  border-radius: $radius-full;
+  @include spin;
+}

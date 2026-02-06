@@ -1,0 +1,207 @@
+@font-face {
+  font-family: "iconfont";
+  src: url('iconfont.ttf?t=1769849393553') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==================== 原有中文类名 ==================== */
+.icon-fenlei:before { content: "\f00d6"; }
+.icon-liuliang:before { content: "\f02d9"; }
+.icon-rili:before { content: "\f02e3"; }
+.icon-liuliangbao:before { content: "\e6f3"; }
+.icon-qingdan:before { content: "\e615"; }
+.icon-dianhua:before { content: "\e621"; }
+.icon-shizhong:before { content: "\e74f"; }
+.icon-shuaxin:before { content: "\e782"; }
+.icon-bangzhuzhongxin:before { content: "\e78f"; }
+.icon-zhaoxiangji:before { content: "\e663"; }
+.icon-qianqian:before { content: "\e655"; }
+.icon-xiugai07:before { content: "\e738"; }
+.icon-dengpao:before { content: "\e60e"; }
+.icon-taocan:before { content: "\e63b"; }
+.icon-dibiao:before { content: "\e719"; }
+.icon-yibantishi:before { content: "\e725"; }
+.icon-zhuanquliuliang:before { content: "\e729"; }
+.icon-youjiantou:before { content: "\e624"; }
+.icon-zuojiantou:before { content: "\e625"; }
+.icon-xinfeng:before { content: "\e61b"; }
+.icon-shangchuan:before { content: "\e628"; }
+.icon-biaoqian:before { content: "\e6a4"; }
+.icon-zhengquetishi:before { content: "\e6a5"; }
+.icon-qunzu:before { content: "\e641"; }
+.icon-yonghu:before { content: "\e720"; }
+.icon-shangjiantou:before { content: "\e79d"; }
+.icon-xiajiantou:before { content: "\e79e"; }
+.icon-duigou:before { content: "\ebe6"; }
+.icon-xiazai:before { content: "\e606"; }
+.icon-tianjia:before { content: "\e607"; }
+.icon-xiaoxiduihuaxinxi:before { content: "\e626"; }
+.icon-baocun:before { content: "\e936"; }
+.icon-anquan:before { content: "\ec4d"; }
+.icon-jinzhi:before { content: "\e654"; }
+.icon-aixin:before { content: "\e83f"; }
+.icon-shezhi:before { content: "\e851"; }
+.icon-gengduo:before { content: "\e645"; }
+.icon-icon_huabanfuben:before { content: "\e639"; }
+.icon-wendang:before { content: "\e643"; }
+.icon-tixing:before { content: "\e627"; }
+.icon-sousuo:before { content: "\e602"; }
+.icon-jiaxingshoucang:before { content: "\e622"; }
+.icon-fenxiang:before { content: "\e6e6"; }
+.icon-jiaxingshoucang_tianchong:before { content: "\e8eb"; }
+
+/* ==================== 英文类名映射（与项目代码兼容） ==================== */
+
+/* 导航类 */
+.icon-arrow-left:before,
+.icon-zuojiantou:before { content: "\e625"; }
+
+.icon-arrow-right:before,
+.icon-youjiantou:before { content: "\e624"; }
+
+.icon-arrow-down:before,
+.icon-xiajiantou:before { content: "\e79e"; }
+
+.icon-plus:before,
+.icon-tianjia:before { content: "\e607"; }
+
+.icon-more:before,
+.icon-gengduo:before { content: "\e645"; }
+
+/* 用户相关 */
+.icon-user:before,
+.icon-yonghu:before { content: "\e720"; }
+
+.icon-users:before,
+.icon-qunzu:before { content: "\e641"; }
+
+.icon-phone:before,
+.icon-dianhua:before { content: "\e621"; }
+
+.icon-mail:before,
+.icon-email:before,
+.icon-xinfeng:before { content: "\e61b"; }
+
+.icon-map-pin:before,
+.icon-dibiao:before { content: "\e719"; }
+
+/* 功能操作 */
+.icon-search:before,
+.icon-sousuo:before { content: "\e602"; }
+
+.icon-settings:before,
+.icon-shezhi:before { content: "\e851"; }
+
+.icon-bell:before,
+.icon-tixing:before { content: "\e627"; }
+
+.icon-edit:before,
+.icon-xiugai07:before { content: "\e738"; }
+
+.icon-trash:before,
+.icon-trash-2:before { content: "\e654"; }
+
+.icon-save:before,
+.icon-baocun:before { content: "\e936"; }
+
+.icon-camera:before,
+.icon-zhaoxiangji:before { content: "\e663"; }
+
+.icon-refresh:before,
+.icon-shuaxin:before { content: "\e782"; }
+
+/* 财务/统计 */
+.icon-wallet:before,
+.icon-qianqian:before { content: "\e655"; }
+
+.icon-bar-chart:before,
+.icon-bar-chart-2:before,
+.icon-zhuanquliuliang:before { content: "\e729"; }
+
+.icon-pie-chart:before,
+.icon-fenlei:before { content: "\f00d6"; }
+
+.icon-activity:before,
+.icon-liuliang:before { content: "\f02d9"; }
+
+.icon-trend-up:before,
+.icon-shangjiantou:before { content: "\e79d"; }
+
+.icon-trend-down:before { content: "\e79e"; }
+
+.icon-download:before,
+.icon-xiazai:before { content: "\e606"; }
+
+.icon-file-text:before,
+.icon-wendang:before { content: "\e643"; }
+
+.icon-inbox:before,
+.icon-qingdan:before { content: "\e615"; }
+
+/* 关系/标签 */
+.icon-heart:before,
+.icon-aixin:before { content: "\e83f"; }
+
+.icon-star:before,
+.icon-jiaxingshoucang:before { content: "\e622"; }
+
+.icon-star-fill:before,
+.icon-jiaxingshoucang_tianchong:before { content: "\e8eb"; }
+
+.icon-tag:before,
+.icon-biaoqian:before { content: "\e6a4"; }
+
+.icon-calendar:before,
+.icon-rili:before { content: "\f02e3"; }
+
+.icon-clock:before,
+.icon-shizhong:before { content: "\e74f"; }
+
+.icon-message-square:before,
+.icon-xiaoxiduihuaxinxi:before { content: "\e626"; }
+
+/* 安全/系统 */
+.icon-lock:before,
+.icon-anquan:before { content: "\ec4d"; }
+
+.icon-check:before,
+.icon-duigou:before { content: "\ebe6"; }
+
+.icon-check-circle:before,
+.icon-zhengquetishi:before { content: "\e6a5"; }
+
+.icon-info:before,
+.icon-yibantishi:before { content: "\e725"; }
+
+.icon-help-circle:before,
+.icon-bangzhuzhongxin:before { content: "\e78f"; }
+
+.icon-log-out:before,
+.icon-fenxiang:before { content: "\e6e6"; }
+
+.icon-database:before,
+.icon-liuliangbao:before { content: "\e6f3"; }
+
+.icon-cloud-upload:before,
+.icon-shangchuan:before { content: "\e628"; }
+
+.icon-layers:before,
+.icon-taocan:before { content: "\e63b"; }
+
+/* 状态图标 */
+.icon-bell-off:before,
+.icon-jinzhi:before { content: "\e654"; }
+
+.icon-fire:before,
+.icon-dengpao:before { content: "\e60e"; }
+
+/* 其他 */
+.icon-chart:before,
+.icon-icon_huabanfuben:before { content: "\e639"; }
