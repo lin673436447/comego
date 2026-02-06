@@ -29,22 +29,50 @@ jobs:
       - name: Run Tests
         run: mvn test
       
-      # 步骤5：部署到服务器
-      - name: Deploy to Server
+      # 步骤5：部署JAR包到服务器
+      - name: Deploy JAR to Server
         uses: easingthemes/ssh-deploy@v2
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          REMOTE_PORT: 22
           TARGET: ${{ secrets.DEPLOY_TARGET }}
           SOURCE: 'target/record-0.0.1-SNAPSHOT.jar'
-          SCRIPT_AFTER: |
+          ARGS: -rltgoDzvO
+      
+      # 步骤6：停止旧服务并启动新服务
+      - name: Restart Application
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
             # 停止旧服务
             PID=$(ps -ef | grep record-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}')
             if [ -n "$PID" ]; then
+              echo "Stopping old service: $PID"
               kill -9 $PID
+              sleep 2
             fi
+            
             # 启动新服务
             cd ${{ secrets.DEPLOY_TARGET }}
+            echo "Starting new service..."
             nohup java -jar -Dspring.profiles.active=prod -Dspring.config.location=./config/ record-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
-            echo "Application deployed successfully"
+            
+            # 等待服务启动
+            sleep 5
+            
+            # 检查服务状态
+            NEW_PID=$(ps -ef | grep record-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}')
+            if [ -n "$NEW_PID" ]; then
+              echo "Application deployed successfully with PID: $NEW_PID"
+              echo "Last 10 lines of application log:"
+              tail -10 app.log
+            else
+              echo "Failed to start application"
+              exit 1
+            fi
