@@ -103,12 +103,27 @@
           </view>
         </view>
         
+        <!-- 协议勾选 -->
+        <view class="agreement-section">
+          <view class="checkbox-wrapper">
+            <view class="checkbox" :class="{ 'checked': agreeAgreement }" @click="toggleAgreement">
+              <text v-if="agreeAgreement" class="check-icon">✓</text>
+            </view>
+            <view class="agreement-text">
+              <text class="text-normal">我已阅读并同意</text>
+              <text class="text-link" @click="goToUserAgreement">《用户服务协议》</text>
+              <text class="text-normal">和</text>
+              <text class="text-link" @click="goToPrivacyPolicy">《隐私政策》</text>
+            </view>
+          </view>
+        </view>
+        
         <view class="action-area">
           <button 
             class="register-btn" 
-            :class="{ 'loading': loading }"
+            :class="{ 'loading': loading, 'disabled': !agreeAgreement }"
             @click="handleRegister" 
-            :disabled="loading"
+            :disabled="loading || !agreeAgreement"
           >
             <text v-if="!loading">注 册</text>
             <view v-else class="loading-spinner"></view>
@@ -139,6 +154,7 @@ export default {
       showPassword: false,
       showConfirmPassword: false,
       loading: false,
+      agreeAgreement: false,
       usernameFocus: false,
       phoneFocus: false,
       passwordFocus: false,
@@ -156,6 +172,22 @@ export default {
     
     toggleConfirmPassword() {
       this.showConfirmPassword = !this.showConfirmPassword
+    },
+    
+    toggleAgreement() {
+      this.agreeAgreement = !this.agreeAgreement
+    },
+    
+    goToUserAgreement() {
+      uni.navigateTo({
+        url: '/pages/agreement/user-agreement'
+      })
+    },
+    
+    goToPrivacyPolicy() {
+      uni.navigateTo({
+        url: '/pages/agreement/privacy-policy'
+      })
     },
     
     validateForm() {
@@ -424,7 +456,64 @@ export default {
 
 /* 注册按钮 */
 .action-area {
-  margin-top: 40rpx;
+  margin-top: 30rpx;
+}
+
+/* 协议勾选区域 */
+.agreement-section {
+  margin-top: 30rpx;
+  padding: 0 10rpx;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+}
+
+.checkbox {
+  width: 36rpx;
+  height: 36rpx;
+  border: 2rpx solid #CCCCCC;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 4rpx;
+  transition: all 0.3s ease;
+  
+  &.checked {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-color: #f5576c;
+  }
+  
+  .check-icon {
+    font-size: 24rpx;
+    color: #FFFFFF;
+    font-weight: bold;
+  }
+}
+
+.agreement-text {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4rpx;
+  
+  .text-normal {
+    font-size: 26rpx;
+    color: #666666;
+    line-height: 1.6;
+  }
+  
+  .text-link {
+    font-size: 26rpx;
+    color: #f5576c;
+    font-weight: 500;
+    line-height: 1.6;
+  }
 }
 
 .register-btn {
@@ -449,6 +538,11 @@ export default {
   
   &[disabled] {
     opacity: 0.7;
+  }
+  
+  &.disabled {
+    background: linear-gradient(135deg, #ccc 0%, #999 100%);
+    box-shadow: 0 8rpx 24rpx rgba(153, 153, 153, 0.35);
   }
 }
 

@@ -182,6 +182,30 @@
             </view>
           </view>
           
+          <view class="menu-item" @click="goToUserAgreement">
+            <view class="item-left">
+              <view class="item-icon purple">
+                <text class="iconfont icon-file-text"></text>
+              </view>
+              <text class="item-label">用户服务协议</text>
+            </view>
+            <view class="item-right">
+              <text class="iconfont icon-arrow-right"></text>
+            </view>
+          </view>
+          
+          <view class="menu-item" @click="goToPrivacyPolicy">
+            <view class="item-left">
+              <view class="item-icon orange">
+                <text class="iconfont icon-shield"></text>
+              </view>
+              <text class="item-label">隐私政策</text>
+            </view>
+            <view class="item-right">
+              <text class="iconfont icon-arrow-right"></text>
+            </view>
+          </view>
+          
           <view class="menu-item" @click="goToAbout">
             <view class="item-left">
               <view class="item-icon green">
@@ -402,6 +426,18 @@ export default {
       uni.showToast({
         title: '帮助与反馈功能开发中',
         icon: 'none'
+      })
+    },
+    
+    goToUserAgreement() {
+      uni.navigateTo({
+        url: '/pages/agreement/user-agreement'
+      })
+    },
+    
+    goToPrivacyPolicy() {
+      uni.navigateTo({
+        url: '/pages/agreement/privacy-policy'
       })
     },
     

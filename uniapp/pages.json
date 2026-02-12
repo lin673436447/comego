@@ -111,6 +111,20 @@
         "navigationBarTitleText": "通知提醒",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/agreement/user-agreement",
+      "style": {
+        "navigationBarTitleText": "用户服务协议",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/agreement/privacy-policy",
+      "style": {
+        "navigationBarTitleText": "隐私政策",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "globalStyle": {

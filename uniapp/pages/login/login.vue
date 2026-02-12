@@ -83,8 +83,8 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
-      phone: '13800138001',
-      password: '123456',
+      phone: '',
+      password: '',
       showPassword: false,
       loading: false,
       phoneFocus: false,
